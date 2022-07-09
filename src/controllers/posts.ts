@@ -3,7 +3,7 @@ import Post from '../models/Post';
 
 const getPosts = async(request: Request, response: Response) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate('owner');
     response.json(posts);
   } catch (error) {
     if (error instanceof Error) {
@@ -15,7 +15,7 @@ const getPosts = async(request: Request, response: Response) => {
 const getPost = async(request: Request, response: Response) => {
   const { id } = request.params;
   try {
-    const post = await Post.findById({_id: id});
+    const post = await Post.findById({_id: id}).populate('owner');
     response.json(post);
   } catch (error) {
     if (error instanceof Error) {
@@ -28,6 +28,7 @@ const newPost = async(request: Request, response: Response) => {
   const { title, content } = request.body;
   try {
     const newPost = new Post({ title, content });
+    newPost.owner = request.user._id;
     const postSaved = await newPost.save();
     
     return response.status(201).json(postSaved);
@@ -46,13 +47,17 @@ const updatePost = async(request: Request, response: Response) => {
   try {
     const updatePost = await Post.findById({_id: id});
     if(updatePost) {
-      updatePost.title = title || updatePost.title;
-      updatePost.content = content || updatePost.content;
-      const postUpdated = await updatePost.save();
-
-      response.json(postUpdated);
+      if(updatePost.owner.toString() === request.user._id.toString()) {
+        updatePost.title = title || updatePost.title;
+        updatePost.content = content || updatePost.content;
+        const postUpdated = await updatePost.save();
+        
+        response.json(postUpdated);
+      } else { //error for front
+        const err: Error = new Error('Error in auth, please only the user who submitted this project can update it.');
+        response.status(401).json({err: err.message});
+      }
     }
-
   } catch (error) {
     if (error instanceof Error) {
       response.status(500).json({error: error.message});
@@ -65,8 +70,13 @@ const deletePost = async(request: Request, response: Response) => {
   try {
     const deletePost = await Post.findById({_id: id});
     if(deletePost) {
-      deletePost.delete();
-      response.json({msg: 'ok'});
+      if(deletePost.owner.toString() === request.user._id.toString()) {
+        deletePost.delete();
+        response.json({msg: 'ok'});
+      } else { //error for front
+        const err: Error = new Error('Error in auth, please only the user who submitted this project can remove it.');
+        return response.status(401).json({err: err.message});
+      }
     }
   } catch (error) {
     if(error instanceof Error) {
