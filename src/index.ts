@@ -1,21 +1,22 @@
-import express from 'express'
-import { connectDB } from './database'
-import routerPost from './routes/post'
-import dotenv from 'dotenv'
-import routerAuth from './routes/auth'
-dotenv.config()
+import express from 'express';
+import dotenv from 'dotenv';
+import { connectDB } from './database';
+import routerPost from './routes/post';
+import routerAuth from './routes/auth';
 
-const PORT: number = parseInt(process.env.PORT as string, 10)
+dotenv.config();
 
-const app = express()
-connectDB()
+const PORT: number = parseInt(process.env.PORT as string, 10);
 
-app.use(express.json())
+const app = express();
+connectDB();
+
+app.use(express.json());
 
 // routes
-app.use('/post', routerPost)
-app.use('/auth', routerAuth)
+app.use('/post', routerPost);
+app.use('/auth', routerAuth);
 
 app.listen(PORT, () => {
-  console.log('listening on port', PORT)
-})
+  console.log('listening on port', PORT);
+});
