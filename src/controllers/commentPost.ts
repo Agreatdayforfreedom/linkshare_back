@@ -4,7 +4,7 @@ import CommentPost from "../models/CommentPost";
 const getComments = async(request: Request, response: Response) => {
   const { post } = request.body;    
   try {
-    const comments = await CommentPost.find({post});
+    const comments = await CommentPost.find({post}).populate('emitter');
     response.json(comments) 
   } catch (error) {
     console.log(error);

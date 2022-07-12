@@ -13,6 +13,15 @@ const postSchema = new mongoose.Schema<IPost>({
 }, {
   timestamps: true,
   versionKey: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
+
+// postSchema.virtual('messages', {
+//   ref: 'CommentPost',
+//   localField: '_id',
+//   foreignField: 'post',
+//   count: true
+// });
 
 export default mongoose.model('Post', postSchema);
