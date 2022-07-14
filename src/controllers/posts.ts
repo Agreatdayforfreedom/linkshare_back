@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import CommentPost from '../models/CommentPost';
 import Post from '../models/Post';
 
 const getPosts = async (request: Request, response: Response) => {
@@ -66,11 +67,16 @@ const updatePost = async (request: Request, response: Response) => {
 
 const deletePost = async (request: Request, response: Response) => {
   const { id } = request.params;
+  console.log(id)
+  // response.json({cascadeCommentsDelete});
   try {
     const deletePost = await Post.findById({ _id: id });
     if (deletePost) {
       if (deletePost.owner.toString() === request.user._id.toString()) {
-        deletePost.delete();
+        Promise.all([
+          await deletePost.deleteOne(),
+          await CommentPost.deleteMany({post: id}),
+        ]);
         response.json({ msg: 'ok' });
       } else { // error for front
         const err: Error = new Error('Error in auth, please only the user who submitted this project can remove it.');
