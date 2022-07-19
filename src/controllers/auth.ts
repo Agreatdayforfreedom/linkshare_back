@@ -14,6 +14,7 @@ const signup = async (request: Request, response: Response) => {
     const newUser = await User.create({ username, email, password });
     response.status(201).json({
       token: generateToken(newUser._id),
+      user: newUser
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -35,7 +36,7 @@ const login = async (request: Request, response: Response) => {
         const err: Error = new Error('Incorrect username or password');
         return response.status(400).json({ msg: err.message });
       }
-      response.json({ token: generateToken(login._id) });
+      response.json({ token: generateToken(login._id), user: login });
     }
   } catch (error) {
     if (error instanceof Error) {

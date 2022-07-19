@@ -5,6 +5,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
+  avatar: string;
   verifyPassword: (password: string) => boolean; // TODO: check this
 }
 
@@ -12,6 +13,7 @@ const userSchema = new mongoose.Schema<IUser>({
   username: { type: String, required: true, trim: true },
   email: { type: String, required: true, trim: true },
   password: { type: String, required: true },
+  avatar: { type: String }
 }, {
   timestamps: true,
   versionKey: false,

@@ -22,6 +22,7 @@
       "no-shadow": "warn",
       "consistent-return": "off",
       "import/prefer-default-export": "off",
-      "prefer-destructuring": "warn"
+      "prefer-destructuring": "warn",
+      "linebreak-style": 0
     }
 }
