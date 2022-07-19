@@ -3,17 +3,17 @@ import CommentPost from "../models/CommentPost";
 
 const getComments = async(request: Request, response: Response) => {
   const { id } = request.params;  
-  console.log(request.params)
   try {
     const comments = await CommentPost.find({post: id}).populate('emitter').populate('post');
     response.json(comments) 
   } catch (error) {
-    console.log(error);
+    if(error instanceof Error){
+      response.status(500).json({error: error.message});
+    }
   }
 }
 const newComment = async(request: Request, response: Response) => {
   const { comment, post } = request.body; 
-  console.log(post)
   try {
     if(comment === '') {
       const err: Error = new Error('The comment cannot be empty');
@@ -25,7 +25,9 @@ const newComment = async(request: Request, response: Response) => {
     const commentSaved = await newComment.save();
     response.status(201).json(commentSaved);
   } catch (error) {
-    console.log(error);
+    if(error instanceof Error){
+      response.status(500).json({error: error.message});
+    }
   }
 }
 
@@ -44,7 +46,9 @@ const updateComment = async(request: Request, response: Response) => {
       response.json(commentSaved);
     }
   } catch (error) {
-    console.log(error);
+    if(error instanceof Error){
+      response.status(500).json({error: error.message});
+    }
   }
 }
 const deleteComment = async(request: Request, response: Response) => {
@@ -61,7 +65,9 @@ const deleteComment = async(request: Request, response: Response) => {
       response.json({msg: 'ok'});
     }
   } catch (error) {
-    console.log(error);
+    if(error instanceof Error){
+      response.status(500).json({error: error.message});
+    }
   }
 }
 

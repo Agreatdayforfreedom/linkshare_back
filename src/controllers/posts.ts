@@ -67,7 +67,6 @@ const updatePost = async (request: Request, response: Response) => {
 
 const deletePost = async (request: Request, response: Response) => {
   const { id } = request.params;
-  console.log(id)
   // response.json({cascadeCommentsDelete});
   try {
     const deletePost = await Post.findById({ _id: id });
