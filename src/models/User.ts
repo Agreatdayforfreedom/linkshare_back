@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import { aleatoryAvatar } from '../utils/defaultAvatar';
 
 export interface IUser {
   username: string;
@@ -13,7 +14,7 @@ const userSchema = new mongoose.Schema<IUser>({
   username: { type: String, required: true, trim: true },
   email: { type: String, required: true, trim: true },
   password: { type: String, required: true },
-  avatar: { type: String }
+  avatar: { type: String, default: aleatoryAvatar()}
 }, {
   timestamps: true,
   versionKey: false,

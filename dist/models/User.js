@@ -14,11 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const defaultAvatar_1 = require("../utils/defaultAvatar");
 const userSchema = new mongoose_1.default.Schema({
     username: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true },
     password: { type: String, required: true },
-    avatar: { type: String }
+    avatar: { type: String, default: (0, defaultAvatar_1.aleatoryAvatar)() }
 }, {
     timestamps: true,
     versionKey: false,
