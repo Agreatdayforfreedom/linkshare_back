@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import generateToken from '../utils/generateJwt';
 import User from '../models/User';
+import { suffle } from '../utils/defaultAvatar';
 
 const signup = async (request: Request, response: Response) => {
   const { username, email, password } = request.body;
@@ -11,7 +12,9 @@ const signup = async (request: Request, response: Response) => {
       return response.status(400).json({ msg: err.message });
     }
 
-    const newUser = await User.create({ username, email, password });
+    const newUser = new User({ username, email, password });
+    newUser.avatar = suffle();
+    newUser.save();
     response.status(201).json({
       token: generateToken(newUser._id),
       user: newUser
